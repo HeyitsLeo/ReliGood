@@ -1,0 +1,22 @@
+[
+  {
+    "keywords": ["how long", "how many days", "delivery time", "eta"],
+    "answer": "Delivery takes 10-14 days from order to Lusaka pickup. We'll update you at each step: ordered in China → in transit → arrived Zambia warehouse → ready for pickup."
+  },
+  {
+    "keywords": ["location", "where", "shop", "warehouse", "office"],
+    "answer": "Our Lusaka pickup point is at Manda Hill Shopping Centre, near the taxi rank. Open Mon-Sat 9am-6pm. Full address sent with your pickup code."
+  },
+  {
+    "keywords": ["airtel", "payment", "pay", "how to pay", "deposit"],
+    "answer": "We accept Airtel Money for deposits and balance. Send 30% deposit to our merchant number (provided at checkout), then we place your order from China. Balance is due on pickup."
+  },
+  {
+    "keywords": ["ship from", "china", "origin", "where from"],
+    "answer": "All items ship from our verified suppliers in China via air freight. Everything is quality-checked at our Guangzhou warehouse before flying to Lusaka."
+  },
+  {
+    "keywords": ["refund", "return", "warranty"],
+    "answer": "If your item arrives damaged or wrong, we offer a full refund within 7 days. Please send a photo of the issue via WhatsApp and we'll assist immediately."
+  }
+]

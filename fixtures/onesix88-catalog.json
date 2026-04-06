@@ -1,0 +1,52 @@
+[
+  {
+    "offerId": "1688-offer-001",
+    "title_cn": "小米扫地机器人白色圆形",
+    "title_en": "Xiaomi Robot Vacuum Cleaner White Round",
+    "price_cny": 799,
+    "weight_kg": 6.5,
+    "image_url": "https://cbu01.alicdn.com/img/ibank/vacuum-001.jpg",
+    "source_url": "https://detail.1688.com/offer/vacuum001.html",
+    "keywords": ["vacuum", "robot", "cleaner", "white", "xiaomi", "floor"]
+  },
+  {
+    "offerId": "1688-offer-002",
+    "title_cn": "美的电饭煲5升家用",
+    "title_en": "Midea Rice Cooker 5L Home Use",
+    "price_cny": 159,
+    "weight_kg": 2.3,
+    "image_url": "https://cbu01.alicdn.com/img/ibank/rice-001.jpg",
+    "source_url": "https://detail.1688.com/offer/rice001.html",
+    "keywords": ["rice", "cooker", "kitchen", "midea", "5l"]
+  },
+  {
+    "offerId": "1688-offer-003",
+    "title_cn": "无线蓝牙耳机5.0黑色",
+    "title_en": "Wireless Bluetooth Earbuds 5.0 Black",
+    "price_cny": 75,
+    "weight_kg": 0.2,
+    "image_url": "https://cbu01.alicdn.com/img/ibank/earbuds-001.jpg",
+    "source_url": "https://detail.1688.com/offer/earbuds001.html",
+    "keywords": ["earbuds", "wireless", "bluetooth", "earphones", "headphones", "black"]
+  },
+  {
+    "offerId": "1688-offer-004",
+    "title_cn": "空气炸锅5.5升无油家用",
+    "title_en": "Air Fryer 5.5L Oil-Free Home Use",
+    "price_cny": 289,
+    "weight_kg": 4.8,
+    "image_url": "https://cbu01.alicdn.com/img/ibank/airfryer-001.jpg",
+    "source_url": "https://detail.1688.com/offer/airfryer001.html",
+    "keywords": ["air", "fryer", "kitchen", "oil-free", "5l", "airfryer"]
+  },
+  {
+    "offerId": "1688-offer-005",
+    "title_cn": "保湿面霜500ml干皮",
+    "title_en": "Moisturizing Face Cream 500ml Dry Skin",
+    "price_cny": 55,
+    "weight_kg": 0.6,
+    "image_url": "https://cbu01.alicdn.com/img/ibank/cream-001.jpg",
+    "source_url": "https://detail.1688.com/offer/cream001.html",
+    "keywords": ["lotion", "cream", "face", "moisturizer", "skincare", "beauty"]
+  }
+]

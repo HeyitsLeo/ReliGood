@@ -1,0 +1,202 @@
+[
+  {
+    "shopify_product_id": "gid://shopify/Product/SKU-0001",
+    "title": "Xiaomi Robot Vacuum Cleaner White",
+    "description": "Smart robot vacuum with mapping and auto-charge. White round design.",
+    "category": "electronics_large",
+    "price_zmw": 4200,
+    "image_urls": ["https://cdn.zamgo.shop/img/vacuum-white.jpg"],
+    "tags": ["robot", "vacuum", "cleaner", "smart", "home", "white", "round", "floor"],
+    "in_stock": true
+  },
+  {
+    "shopify_product_id": "gid://shopify/Product/SKU-0002",
+    "title": "iRobot Roomba Style Vacuum Black",
+    "description": "Automatic floor vacuum cleaner, black round robot with suction.",
+    "category": "electronics_large",
+    "price_zmw": 3800,
+    "image_urls": ["https://cdn.zamgo.shop/img/roomba-black.jpg"],
+    "tags": ["robot", "vacuum", "cleaner", "black", "round", "floor", "automatic"],
+    "in_stock": true
+  },
+  {
+    "shopify_product_id": "gid://shopify/Product/SKU-0003",
+    "title": "Midea 5L Electric Rice Cooker",
+    "description": "5 liter electric rice cooker with warm function, non-stick pot, for family.",
+    "category": "electronics_medium",
+    "price_zmw": 680,
+    "image_urls": ["https://cdn.zamgo.shop/img/rice-cooker.jpg"],
+    "tags": ["rice", "cooker", "kitchen", "electric", "midea", "family"],
+    "in_stock": true
+  },
+  {
+    "shopify_product_id": "gid://shopify/Product/SKU-0004",
+    "title": "Philips Digital Air Fryer 5.5L",
+    "description": "Oil-free air fryer 5.5 liter capacity, digital touch controls, healthy cooking.",
+    "category": "electronics_medium",
+    "price_zmw": 1450,
+    "image_urls": ["https://cdn.zamgo.shop/img/airfryer.jpg"],
+    "tags": ["air", "fryer", "kitchen", "philips", "digital", "healthy", "oil-free"],
+    "in_stock": true
+  },
+  {
+    "shopify_product_id": "gid://shopify/Product/SKU-0005",
+    "title": "Samsung Smart TV 43 inch",
+    "description": "43 inch 4K smart television with Android streaming, HDMI ports.",
+    "category": "electronics_large",
+    "price_zmw": 6500,
+    "image_urls": ["https://cdn.zamgo.shop/img/tv43.jpg"],
+    "tags": ["tv", "television", "samsung", "smart", "4k", "43", "android"],
+    "in_stock": true
+  },
+  {
+    "shopify_product_id": "gid://shopify/Product/SKU-0006",
+    "title": "Apple AirPods Pro Wireless Earbuds",
+    "description": "Wireless bluetooth earbuds with noise cancellation and charging case.",
+    "category": "electronics_small",
+    "price_zmw": 2100,
+    "image_urls": ["https://cdn.zamgo.shop/img/airpods.jpg"],
+    "tags": ["earbuds", "airpods", "wireless", "bluetooth", "apple", "earphones", "headphones"],
+    "in_stock": true
+  },
+  {
+    "shopify_product_id": "gid://shopify/Product/SKU-0007",
+    "title": "Generic Wireless Earbuds Bluetooth 5.0",
+    "description": "Affordable wireless earbuds bluetooth 5.0 with charging case, black color.",
+    "category": "electronics_small",
+    "price_zmw": 380,
+    "image_urls": ["https://cdn.zamgo.shop/img/earbuds-generic.jpg"],
+    "tags": ["earbuds", "wireless", "bluetooth", "cheap", "black", "earphones", "headphones"],
+    "in_stock": true
+  },
+  {
+    "shopify_product_id": "gid://shopify/Product/SKU-0008",
+    "title": "Anker USB-C Fast Charging Cable 2m",
+    "description": "2 meter USB-C to USB-A fast charging data cable, durable nylon braided.",
+    "category": "electronics_small",
+    "price_zmw": 120,
+    "image_urls": ["https://cdn.zamgo.shop/img/cable.jpg"],
+    "tags": ["cable", "usb-c", "charging", "anker", "data", "cord"],
+    "in_stock": true
+  },
+  {
+    "shopify_product_id": "gid://shopify/Product/SKU-0009",
+    "title": "Xiaomi 20000mAh Power Bank",
+    "description": "20000mAh portable power bank, fast charge, two USB ports, lightweight.",
+    "category": "electronics_small",
+    "price_zmw": 450,
+    "image_urls": ["https://cdn.zamgo.shop/img/powerbank.jpg"],
+    "tags": ["power", "bank", "battery", "portable", "xiaomi", "charging", "20000mah"],
+    "in_stock": true
+  },
+  {
+    "shopify_product_id": "gid://shopify/Product/SKU-0010",
+    "title": "CeraVe Moisturizing Face Cream 500ml",
+    "description": "Hydrating face and body moisturizer for dry skin, hyaluronic acid, fragrance-free.",
+    "category": "beauty",
+    "price_zmw": 290,
+    "image_urls": ["https://cdn.zamgo.shop/img/cerave.jpg"],
+    "tags": ["lotion", "cream", "face", "moisturizer", "skincare", "cerave", "beauty", "hydrating"],
+    "in_stock": true
+  },
+  {
+    "shopify_product_id": "gid://shopify/Product/SKU-0011",
+    "title": "The Ordinary Niacinamide Serum 30ml",
+    "description": "10% niacinamide with 1% zinc face serum for oily skin and blemishes.",
+    "category": "beauty",
+    "price_zmw": 180,
+    "image_urls": ["https://cdn.zamgo.shop/img/ordinary.jpg"],
+    "tags": ["serum", "niacinamide", "face", "skincare", "beauty", "ordinary"],
+    "in_stock": true
+  },
+  {
+    "shopify_product_id": "gid://shopify/Product/SKU-0012",
+    "title": "Maybelline Matte Lipstick Red",
+    "description": "Long lasting matte red lipstick, moisturizing finish, cruelty-free.",
+    "category": "beauty",
+    "price_zmw": 95,
+    "image_urls": ["https://cdn.zamgo.shop/img/lipstick.jpg"],
+    "tags": ["lipstick", "makeup", "red", "matte", "beauty", "maybelline", "cosmetic"],
+    "in_stock": true
+  },
+  {
+    "shopify_product_id": "gid://shopify/Product/SKU-0013",
+    "title": "Nivea Body Lotion 400ml Dry Skin",
+    "description": "Intensive moisturizing body lotion for dry skin, 400ml, with almond oil.",
+    "category": "beauty",
+    "price_zmw": 75,
+    "image_urls": ["https://cdn.zamgo.shop/img/nivea.jpg"],
+    "tags": ["lotion", "body", "nivea", "moisturizer", "skincare", "beauty", "dry"],
+    "in_stock": true
+  },
+  {
+    "shopify_product_id": "gid://shopify/Product/SKU-0014",
+    "title": "Kids Cartoon T-shirt 3-5 years",
+    "description": "100% cotton children t-shirt with cartoon print, boys and girls, size 3-5 years.",
+    "category": "clothing",
+    "price_zmw": 85,
+    "image_urls": ["https://cdn.zamgo.shop/img/kids-tshirt.jpg"],
+    "tags": ["kids", "children", "tshirt", "cartoon", "cotton", "clothing", "boys", "girls"],
+    "in_stock": true
+  },
+  {
+    "shopify_product_id": "gid://shopify/Product/SKU-0015",
+    "title": "Girls Dress Pink Princess 4-6 years",
+    "description": "Pink princess style dress for girls age 4-6, party dress tulle.",
+    "category": "clothing",
+    "price_zmw": 180,
+    "image_urls": ["https://cdn.zamgo.shop/img/girls-dress.jpg"],
+    "tags": ["girls", "dress", "princess", "pink", "clothing", "children", "party", "kids"],
+    "in_stock": true
+  },
+  {
+    "shopify_product_id": "gid://shopify/Product/SKU-0016",
+    "title": "Women Summer Dress Floral",
+    "description": "Lightweight floral summer dress for women, sizes S-XL, maxi length.",
+    "category": "clothing",
+    "price_zmw": 220,
+    "image_urls": ["https://cdn.zamgo.shop/img/women-dress.jpg"],
+    "tags": ["women", "dress", "summer", "floral", "clothing", "maxi", "female"],
+    "in_stock": true
+  },
+  {
+    "shopify_product_id": "gid://shopify/Product/SKU-0017",
+    "title": "Women Handbag Leather Black",
+    "description": "Black leather handbag for women with gold chain, shoulder bag.",
+    "category": "clothing",
+    "price_zmw": 320,
+    "image_urls": ["https://cdn.zamgo.shop/img/handbag.jpg"],
+    "tags": ["handbag", "bag", "leather", "women", "black", "shoulder", "fashion"],
+    "in_stock": true
+  },
+  {
+    "shopify_product_id": "gid://shopify/Product/SKU-0018",
+    "title": "Cotton Bed Sheet Set Queen Size",
+    "description": "100% cotton bed sheet set queen size, 4 pieces, white, soft.",
+    "category": "home_textile",
+    "price_zmw": 380,
+    "image_urls": ["https://cdn.zamgo.shop/img/bedsheet.jpg"],
+    "tags": ["bed", "sheet", "queen", "cotton", "home", "textile", "white", "bedding"],
+    "in_stock": true
+  },
+  {
+    "shopify_product_id": "gid://shopify/Product/SKU-0019",
+    "title": "Memory Foam Pillow Set of 2",
+    "description": "Memory foam pillows set of 2, neck support, hypoallergenic, medium firm.",
+    "category": "home_textile",
+    "price_zmw": 260,
+    "image_urls": ["https://cdn.zamgo.shop/img/pillow.jpg"],
+    "tags": ["pillow", "memory", "foam", "home", "textile", "bedding", "neck"],
+    "in_stock": true
+  },
+  {
+    "shopify_product_id": "gid://shopify/Product/SKU-0020",
+    "title": "Microfiber Blanket King Size Grey",
+    "description": "Soft microfiber blanket king size grey warm for all seasons, 220x240cm.",
+    "category": "home_textile",
+    "price_zmw": 310,
+    "image_urls": ["https://cdn.zamgo.shop/img/blanket.jpg"],
+    "tags": ["blanket", "microfiber", "king", "grey", "home", "textile", "warm", "bedding"],
+    "in_stock": true
+  }
+]

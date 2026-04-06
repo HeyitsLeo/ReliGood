@@ -1,0 +1,62 @@
+[
+  {
+    "phone": "+260971234567",
+    "name": "Mary Banda",
+    "text": "hi! how much for a robot vacuum cleaner?",
+    "type": "text"
+  },
+  {
+    "phone": "+260977123456",
+    "name": "John Phiri",
+    "text": "do you have wireless earbuds? looking for cheap ones",
+    "type": "text"
+  },
+  {
+    "phone": "+260965554433",
+    "name": "Grace Mwansa",
+    "text": "hello, i want to buy rice cooker. how much?",
+    "type": "text"
+  },
+  {
+    "phone": "+260955112233",
+    "name": "David Tembo",
+    "text": "price for air fryer philips 5 liter",
+    "type": "text"
+  },
+  {
+    "phone": "+260976543210",
+    "name": "Ruth Zulu",
+    "text": "do you have face lotion moisturizer for dry skin",
+    "type": "text"
+  },
+  {
+    "phone": "+260971112223",
+    "name": "Peter Mulenga",
+    "text": "where is my order ORD-7731? when will it arrive?",
+    "type": "text"
+  },
+  {
+    "phone": "+260963334455",
+    "name": "Sarah Ngoma",
+    "text": "how do i pay with airtel money for the deposit?",
+    "type": "text"
+  },
+  {
+    "phone": "+260957778899",
+    "name": "Joseph Lungu",
+    "text": "the item i received is broken! i want a refund now",
+    "type": "text"
+  },
+  {
+    "phone": "+260974445566",
+    "name": "Linda Chanda",
+    "text": "good morning",
+    "type": "text"
+  },
+  {
+    "phone": "+260966667788",
+    "name": "Michael Sakala",
+    "text": "how many days until my parcel arrives from china",
+    "type": "text"
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "name": "zamgo-mvp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@9.12.0",
+  "scripts": {
+    "dev": "concurrently -k -n backend,worker,admin -c blue,magenta,green \"pnpm -C apps/backend dev\" \"pnpm -C apps/backend dev:worker\" \"pnpm -C apps/admin dev\"",
+    "build": "pnpm -r build",
+    "test": "pnpm -C apps/backend test",
+    "db:migrate": "pnpm -C packages/db migrate",
+    "db:seed": "pnpm -C packages/db seed",
+    "db:studio": "pnpm -C packages/db studio",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "sim": "tsx scripts/wati-simulator.ts",
+    "health": "tsx scripts/health-check.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "concurrently": "^9.0.1",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2"
+  }
+}

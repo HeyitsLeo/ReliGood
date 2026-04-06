@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.next/
+build/
+.env
+.env.local
+*.log
+logs/*.jsonl
+.DS_Store
+.turbo/
+coverage/
+.vercel
+*.pem
+*.key
+.env.*.local
