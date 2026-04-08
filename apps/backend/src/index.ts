@@ -6,7 +6,7 @@ import { registerTwilioWebhook } from './api/twilio-webhook.js'
 import { registerHealth } from './api/health.js'
 import { registerTrpc } from './api/trpc.js'
 import { closeDb } from '@zamgo/db'
-import { shutdownQueue } from './queue/index.js'
+import { shutdownQueue, startWorker } from './queue/index.js'
 
 async function bootstrap() {
   const app = Fastify({
@@ -23,11 +23,17 @@ async function bootstrap() {
   })
 
   await registerHealth(app)
-  await registerWhatsAppWebhook(app)
+  // Wrap in plugin so its custom JSON parser doesn't leak to tRPC routes
+  await app.register(async (scope) => {
+    await registerWhatsAppWebhook(scope)
+  })
   await registerTwilioWebhook(app)
   await registerTrpc(app)
 
-  const port = env.BACKEND_PORT
+  // Start BullMQ worker in-process (needed for single-service Railway deploy)
+  startWorker()
+
+  const port = env.PORT ?? env.BACKEND_PORT
   await app.listen({ port, host: '0.0.0.0' })
   logger.info({ port, mode: env.ADAPTER_MODE }, 'backend listening')
 
