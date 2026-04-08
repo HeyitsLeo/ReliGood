@@ -17,7 +17,7 @@
     "@trpc/server": "^11.0.0-rc.553",
     "@zamgo/backend": "workspace:*",
     "@zamgo/shared": "workspace:*",
-    "next": "15.0.0",
+    "next": "15.5.14",
     "react": "19.0.0-rc-69d4b800-20241021",
     "react-dom": "19.0.0-rc-69d4b800-20241021",
     "superjson": "^2.2.1"
