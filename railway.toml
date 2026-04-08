@@ -3,7 +3,7 @@ builder = "nixpacks"
 buildCommand = "pnpm install"
 
 [deploy]
-startCommand = "node --import tsx/esm apps/backend/src/index.ts"
+startCommand = "node --import tsx apps/backend/src/index.ts"
 healthcheckPath = "/health"
 healthcheckTimeout = 120
 restartPolicyType = "ON_FAILURE"
