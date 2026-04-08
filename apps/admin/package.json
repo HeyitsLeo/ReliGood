@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev -p ${ADMIN_PORT:-3000}",
     "build": "next build",
-    "start": "next start -p ${ADMIN_PORT:-3000}",
+    "start": "next start -p ${PORT:-${ADMIN_PORT:-3000}}",
     "lint": "next lint",
     "typecheck": "tsc --noEmit"
   },
