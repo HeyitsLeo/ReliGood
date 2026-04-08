@@ -13,8 +13,24 @@ const MIGRATIONS_DIR = join(__dirname, '..', 'migrations')
 const DATABASE_URL =
   process.env.DATABASE_URL ?? 'postgresql://zamgo:zamgo_dev@127.0.0.1:5432/zamgo'
 
+async function waitForDb(url: string, retries = 10, delayMs = 3000) {
+  for (let i = 1; i <= retries; i++) {
+    try {
+      const sql = postgres(url, { max: 1, connect_timeout: 5 })
+      await sql`SELECT 1`
+      console.log(`[migrate] db connected`)
+      return sql
+    } catch (e) {
+      console.log(`[migrate] waiting for db... attempt ${i}/${retries}`)
+      if (i === retries) throw e
+      await new Promise((r) => setTimeout(r, delayMs))
+    }
+  }
+  throw new Error('unreachable')
+}
+
 async function main() {
-  const sql = postgres(DATABASE_URL, { max: 1 })
+  const sql = await waitForDb(DATABASE_URL)
 
   // Ensure migrations tracking table
   await sql.unsafe(`
