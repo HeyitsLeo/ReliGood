@@ -1,19 +1,63 @@
 import { z } from 'zod'
 import { INTENTS, PRODUCT_REQUEST_STATUSES, ORDER_STATUSES, MESSAGE_TYPES } from './types.js'
 
-// ================ WATI webhook ================
+// ================ WhatsApp Cloud API webhook ================
 
-export const WatiWebhookPayloadSchema = z.object({
-  eventType: z.string(),
-  waId: z.string().min(5),
-  senderName: z.string().optional().default(''),
-  text: z.string().optional().default(''),
-  type: z.enum(['text', 'image', 'audio', 'interactive']).default('text'),
-  mediaUrl: z.string().optional(),
-  timestamp: z.string().optional(),
-  messageId: z.string().optional(),
+const WhatsAppProfileSchema = z.object({
+  name: z.string().optional().default(''),
 })
-export type WatiWebhookPayload = z.infer<typeof WatiWebhookPayloadSchema>
+
+const WhatsAppContactSchema = z.object({
+  profile: WhatsAppProfileSchema.optional(),
+  wa_id: z.string(),
+})
+
+const WhatsAppTextSchema = z.object({ body: z.string() })
+const WhatsAppImageSchema = z.object({ id: z.string(), mime_type: z.string().optional(), caption: z.string().optional() })
+const WhatsAppAudioSchema = z.object({ id: z.string(), mime_type: z.string().optional() })
+const WhatsAppListReplySchema = z.object({ id: z.string(), title: z.string(), description: z.string().optional() })
+const WhatsAppInteractiveSchema = z.object({ type: z.string(), list_reply: WhatsAppListReplySchema.optional() })
+
+const WhatsAppMessageSchema = z.object({
+  from: z.string(),
+  id: z.string(),
+  timestamp: z.string(),
+  type: z.enum(['text', 'image', 'audio', 'interactive', 'video', 'document', 'sticker', 'location', 'contacts', 'reaction', 'order', 'system', 'unknown']),
+  text: WhatsAppTextSchema.optional(),
+  image: WhatsAppImageSchema.optional(),
+  audio: WhatsAppAudioSchema.optional(),
+  interactive: WhatsAppInteractiveSchema.optional(),
+})
+
+const WhatsAppMetadataSchema = z.object({
+  display_phone_number: z.string().optional(),
+  phone_number_id: z.string(),
+})
+
+const WhatsAppValueSchema = z.object({
+  messaging_product: z.string(),
+  metadata: WhatsAppMetadataSchema,
+  contacts: z.array(WhatsAppContactSchema).optional(),
+  messages: z.array(WhatsAppMessageSchema).optional(),
+  statuses: z.array(z.any()).optional(),
+})
+
+const WhatsAppChangeSchema = z.object({
+  value: WhatsAppValueSchema,
+  field: z.string(),
+})
+
+const WhatsAppEntrySchema = z.object({
+  id: z.string(),
+  changes: z.array(WhatsAppChangeSchema),
+})
+
+export const WhatsAppCloudWebhookSchema = z.object({
+  object: z.literal('whatsapp_business_account'),
+  entry: z.array(WhatsAppEntrySchema),
+})
+export type WhatsAppCloudWebhook = z.infer<typeof WhatsAppCloudWebhookSchema>
+export type WhatsAppMessage = z.infer<typeof WhatsAppMessageSchema>
 
 // ================ Quote ================
 

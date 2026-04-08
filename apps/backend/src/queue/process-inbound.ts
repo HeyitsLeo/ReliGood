@@ -14,7 +14,7 @@ import { computeQuote } from '../domain/quote.js'
 import { saveQuote } from '../domain/quote-repo.js'
 import { getMessage, insertMessage } from '../domain/messages.js'
 import { getCustomerById } from '../domain/customer.js'
-import { sendText } from '../integrations/wati/index.js'
+import { sendText } from '../integrations/whatsapp/index.js'
 import { searchOffers } from '../integrations/onesix88/index.js'
 import { MAX_RECENT_MESSAGES } from '@zamgo/shared'
 

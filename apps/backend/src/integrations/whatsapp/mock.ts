@@ -1,5 +1,5 @@
 /**
- * Mock WATI adapter: appends messages to logs/outbound.jsonl and prints to console.
+ * Mock WhatsApp adapter: appends messages to logs/outbound.jsonl and prints to console.
  */
 import { appendFile, mkdir } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
@@ -33,7 +33,7 @@ export async function sendText(waPhone: string, text: string): Promise<{ message
     text,
     messageId,
   })
-  logger.info({ to: waPhone, text: text.slice(0, 100) }, '[wati-mock] sendText')
+  logger.info({ to: waPhone, text: text.slice(0, 100) }, '[whatsapp-mock] sendText')
   return { messageId }
 }
 
@@ -55,7 +55,12 @@ export async function sendInteractiveList(
   })
   logger.info(
     { to: waPhone, header, itemCount: items.length },
-    '[wati-mock] sendInteractiveList',
+    '[whatsapp-mock] sendInteractiveList',
   )
   return { messageId }
+}
+
+export async function getMediaUrl(mediaId: string): Promise<string> {
+  logger.info({ mediaId }, '[whatsapp-mock] getMediaUrl')
+  return `https://mock-cdn.example.com/media/${mediaId}`
 }

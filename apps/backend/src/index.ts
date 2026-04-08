@@ -1,7 +1,8 @@
 import Fastify from 'fastify'
 import { env } from './config.js'
 import { logger } from './logger.js'
-import { registerWatiWebhook } from './api/wati-webhook.js'
+import { registerWhatsAppWebhook } from './api/whatsapp-webhook.js'
+import { registerTwilioWebhook } from './api/twilio-webhook.js'
 import { registerHealth } from './api/health.js'
 import { registerTrpc } from './api/trpc.js'
 import { closeDb } from '@zamgo/db'
@@ -17,12 +18,13 @@ async function bootstrap() {
   app.addHook('onRequest', async (req, reply) => {
     reply.header('Access-Control-Allow-Origin', '*')
     reply.header('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE,OPTIONS')
-    reply.header('Access-Control-Allow-Headers', 'content-type,x-wati-signature')
+    reply.header('Access-Control-Allow-Headers', 'content-type,x-hub-signature-256,x-twilio-signature')
     if (req.method === 'OPTIONS') return reply.code(204).send()
   })
 
   await registerHealth(app)
-  await registerWatiWebhook(app)
+  await registerWhatsAppWebhook(app)
+  await registerTwilioWebhook(app)
   await registerTrpc(app)
 
   const port = env.BACKEND_PORT

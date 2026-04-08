@@ -13,7 +13,8 @@
     "db:studio": "pnpm -C packages/db studio",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
-    "sim": "tsx scripts/wati-simulator.ts",
+    "sim": "tsx scripts/whatsapp-simulator.ts",
+    "reembed": "tsx scripts/reembed.ts",
     "health": "tsx scripts/health-check.ts"
   },
   "devDependencies": {

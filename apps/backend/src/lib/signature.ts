@@ -24,3 +24,42 @@ export function verifySignature(
     return false
   }
 }
+
+/**
+ * Twilio signature verification.
+ * Algorithm: HMAC-SHA1 over (url + sorted params key-value concatenation), base64 encoded.
+ */
+export function verifyTwilioSignature(
+  url: string,
+  params: Record<string, string>,
+  signature: string | undefined,
+  authToken: string,
+): boolean {
+  if (!signature) return false
+  const keys = Object.keys(params).sort()
+  let data = url
+  for (const key of keys) {
+    data += key + params[key]
+  }
+  const expected = createHmac('sha1', authToken).update(data, 'utf8').digest('base64')
+  if (expected.length !== signature.length) return false
+  try {
+    return timingSafeEqual(Buffer.from(expected), Buffer.from(signature))
+  } catch {
+    return false
+  }
+}
+
+/** Compute Twilio signature (for testing). */
+export function computeTwilioSignature(
+  url: string,
+  params: Record<string, string>,
+  authToken: string,
+): string {
+  const keys = Object.keys(params).sort()
+  let data = url
+  for (const key of keys) {
+    data += key + params[key]
+  }
+  return createHmac('sha1', authToken).update(data, 'utf8').digest('base64')
+}
