@@ -3,7 +3,7 @@ import postgres from 'postgres'
 import * as schema from './schema.js'
 
 const DATABASE_URL =
-  process.env.DATABASE_URL ?? 'postgresql://zamgo:zamgo_dev@localhost:5432/zamgo'
+  process.env.DATABASE_URL ?? 'postgresql://zamgo:zamgo_dev@127.0.0.1:5432/zamgo'
 
 export type DbClient = ReturnType<typeof drizzle<typeof schema>>
 

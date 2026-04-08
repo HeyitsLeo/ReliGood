@@ -11,7 +11,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const MIGRATIONS_DIR = join(__dirname, '..', 'migrations')
 
 const DATABASE_URL =
-  process.env.DATABASE_URL ?? 'postgresql://zamgo:zamgo_dev@localhost:5432/zamgo'
+  process.env.DATABASE_URL ?? 'postgresql://zamgo:zamgo_dev@127.0.0.1:5432/zamgo'
 
 async function main() {
   const sql = postgres(DATABASE_URL, { max: 1 })

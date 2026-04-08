@@ -8,7 +8,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const FIXTURES_DIR = join(__dirname, '..', '..', '..', 'fixtures')
 
 const DATABASE_URL =
-  process.env.DATABASE_URL ?? 'postgresql://zamgo:zamgo_dev@localhost:5432/zamgo'
+  process.env.DATABASE_URL ?? 'postgresql://zamgo:zamgo_dev@127.0.0.1:5432/zamgo'
 
 interface ShopifyFixture {
   shopify_product_id: string

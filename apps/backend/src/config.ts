@@ -15,8 +15,8 @@ const EnvSchema = z.object({
   LOG_LEVEL: z.string().default('info'),
   BACKEND_PORT: z.coerce.number().default(3001), // fallback; PORT takes priority (Railway)
   PORT: z.coerce.number().optional(),
-  DATABASE_URL: z.string().default('postgresql://zamgo:zamgo_dev@localhost:5432/zamgo'),
-  REDIS_URL: z.string().default('redis://localhost:6379'),
+  DATABASE_URL: z.string().default('postgresql://zamgo:zamgo_dev@127.0.0.1:5432/zamgo'),
+  REDIS_URL: z.string().default('redis://127.0.0.1:6379'),
   WHATSAPP_PHONE_NUMBER_ID: z.string().default('000000000000000'),
   WHATSAPP_ACCESS_TOKEN: z.string().default('mock-wa-token'),
   WHATSAPP_APP_SECRET: z.string().default('dev-secret'),
