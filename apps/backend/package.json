@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "dev:worker": "tsx watch src/queue/worker-entry.ts",
-    "start": "node --loader tsx/esm src/index.ts",
+    "start": "node --import tsx/esm src/index.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
