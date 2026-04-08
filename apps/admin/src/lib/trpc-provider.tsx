@@ -5,7 +5,7 @@ import { httpBatchLink } from '@trpc/client'
 import superjson from 'superjson'
 import { trpc } from './trpc'
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://127.0.0.1:3001'
 
 export function TrpcProvider({ children }: { children: ReactNode }) {
   const [queryClient] = useState(
