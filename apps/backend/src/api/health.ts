@@ -28,6 +28,7 @@ export async function registerHealth(app: FastifyInstance) {
       result.redis = `error: ${(e as Error).message}`
       result.ok = false
     }
-    return reply.code(result.ok ? 200 : 503).send(result)
+    // Always return 200 for Railway liveness check; include dependency status for monitoring
+    return reply.code(200).send(result)
   })
 }
