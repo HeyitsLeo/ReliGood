@@ -13,11 +13,11 @@ import {
 } from 'drizzle-orm/pg-core'
 import { sql } from 'drizzle-orm'
 
-// ================= Custom vector(1536) type =================
+// ================= Custom vector(1024) type =================
 // Drizzle doesn't natively support pgvector; wrap with customType.
 export const vector = customType<{ data: number[]; driverData: string }>({
   dataType() {
-    return 'vector(1536)'
+    return 'vector(1024)'
   },
   toDriver(value: number[]): string {
     return `[${value.join(',')}]`

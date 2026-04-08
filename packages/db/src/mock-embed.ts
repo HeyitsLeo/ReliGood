@@ -1,5 +1,5 @@
 /**
- * Deterministic mock embedding: token-bag projection into a 1536-dim space,
+ * Deterministic mock embedding: token-bag projection into a 1024-dim space,
  * with L2 normalization. Same text → same vector; texts sharing tokens get
  * similar vectors → pgvector cosine similarity becomes meaningful for the MVP.
  *
@@ -9,7 +9,7 @@
  *
  * Must stay byte-identical between seed and runtime.
  */
-const DIM = 1536
+const DIM = 1024
 
 /** FNV-1a 32-bit hash (deterministic, no deps) */
 function fnv1a(str: string): number {

@@ -8,7 +8,7 @@ import type { ChatMessage, ChatResponse, VisionResponse } from './mock.js'
 
 let _client: OpenAI | null = null
 function getClient(): OpenAI {
-  if (!_client) _client = new OpenAI({ apiKey: env.OPENAI_API_KEY })
+  if (!_client) _client = new OpenAI({ apiKey: env.OPENAI_API_KEY, baseURL: env.OPENAI_BASE_URL })
   return _client
 }
 
