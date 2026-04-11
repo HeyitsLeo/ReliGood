@@ -2,12 +2,13 @@ import { logger } from '../logger.js'
 import {
   loadState,
   saveState,
+  freshState,
   appendCustomerMessage,
   appendAgentMessage,
 } from '../ai/conversation-state.js'
 import { routeMessage } from '../ai/router.js'
 import { matchProduct } from '../ai/matcher.js'
-import { answerFaq, greetingResponse } from '../ai/inquiry.js'
+import { answerFaq } from '../ai/inquiry.js'
 import { renderQuoteMessage, renderMatchConfirmMessage, renderNotFoundMessage } from '../ai/quote.js'
 import { renderWelcomeMessage } from '../ai/welcome.js'
 import { createProductRequest, updateStatus, updateMatch } from '../domain/product-request.js'
@@ -26,11 +27,35 @@ export interface InboundJobData {
   imageUrl?: string | null
 }
 
+const RESET_MAGIC_WORDS = ['reset', '/reset', 'restart', '/restart', '/start']
+
+async function sendWelcome(
+  customerId: string,
+  waPhone: string,
+): Promise<string> {
+  const memberNumber = await countCustomers()
+  const welcomeText = renderWelcomeMessage({ phone: waPhone, memberNumber })
+  await sendReply(waPhone, customerId, welcomeText, 'inquiry')
+  logger.info({ customerId, memberNumber }, 'welcome message sent')
+  return welcomeText
+}
+
 export async function processInbound(data: InboundJobData): Promise<void> {
   const { customerId, rawText, imageUrl } = data
   const customer = await getCustomerById(customerId)
   if (!customer) {
     logger.warn({ customerId }, 'processInbound: customer not found')
+    return
+  }
+
+  // 0. Magic word: "reset" / "/reset" / "restart" → clear state and re-send welcome.
+  //    Useful for testing the welcome flow without manually clearing Redis.
+  const trimmed = rawText.trim().toLowerCase()
+  if (RESET_MAGIC_WORDS.includes(trimmed)) {
+    logger.info({ customerId, trimmed }, 'reset magic word detected')
+    const fresh = freshState(customerId)
+    await saveState(fresh)
+    await sendWelcome(customerId, customer.waPhone)
     return
   }
 
@@ -41,17 +66,11 @@ export async function processInbound(data: InboundJobData): Promise<void> {
   // 1a. First-ever message from this customer → send ReliGood welcome message and stop.
   //     messageCount === 1 means this is their very first inbound in the current state window.
   if (state.messageCount === 1) {
-    const memberNumber = await countCustomers()
-    const welcomeText = renderWelcomeMessage({
-      phone: customer.waPhone,
-      memberNumber,
-    })
-    await sendReply(customer.waPhone, customerId, welcomeText, 'inquiry')
+    const welcomeText = await sendWelcome(customerId, customer.waPhone)
     state = appendAgentMessage(state, welcomeText)
     state.lastAgent = 'inquiry'
     state.lastIntents = [...state.lastIntents, 'greeting' as const].slice(-MAX_RECENT_MESSAGES)
     await saveState(state)
-    logger.info({ customerId, memberNumber }, 'welcome message sent')
     return
   }
 
@@ -86,7 +105,11 @@ export async function processInbound(data: InboundJobData): Promise<void> {
   switch (route.agent) {
     case 'inquiry': {
       if (route.intent === 'greeting') {
-        replyText = greetingResponse(customer.waName ?? '')
+        const memberNumber = await countCustomers()
+        replyText = renderWelcomeMessage({
+          phone: customer.waPhone,
+          memberNumber,
+        })
       } else {
         const faq = await answerFaq(rawText)
         replyText =
