@@ -140,11 +140,11 @@ export async function processInbound(data: InboundJobData): Promise<void> {
           similarity: match.bestMatch.similarity,
         })
       } else {
-        // No strong match in Shopify cache. Skip 1688 sourcing for now —
-        // let the LLM respond conversationally with whatever candidates we
-        // did find as grounding, so the team sees the request and the
-        // customer gets a real answer.
-        replyText = await chatAnswer(state, match.candidates)
+        // No strong match in Shopify cache. Skip 1688 sourcing and reply
+        // with a fixed, honest English message so the customer knows we
+        // don't carry what they described.
+        replyText =
+          "Sorry, we don't have what you're describing at the moment."
         await updateStatus(pr.id, 'closed')
       }
       break
