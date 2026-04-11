@@ -10,15 +10,12 @@ import { routeMessage } from '../ai/router.js'
 import { matchProduct } from '../ai/matcher.js'
 import { answerFaq } from '../ai/inquiry.js'
 import { chatAnswer } from '../ai/chat.js'
-import { renderQuoteMessage, renderMatchConfirmMessage, renderNotFoundMessage } from '../ai/quote.js'
+import { renderMatchConfirmMessage } from '../ai/quote.js'
 import { renderWelcomeMessage } from '../ai/welcome.js'
 import { createProductRequest, updateStatus, updateMatch } from '../domain/product-request.js'
-import { computeQuote } from '../domain/quote.js'
-import { saveQuote } from '../domain/quote-repo.js'
 import { getMessage, insertMessage } from '../domain/messages.js'
 import { getCustomerById, countCustomers } from '../domain/customer.js'
 import { sendText } from '../integrations/whatsapp/index.js'
-import { searchOffers } from '../integrations/onesix88/index.js'
 import { MAX_RECENT_MESSAGES } from '@zamgo/shared'
 
 export interface InboundJobData {
@@ -143,36 +140,12 @@ export async function processInbound(data: InboundJobData): Promise<void> {
           similarity: match.bestMatch.similarity,
         })
       } else {
-        // Taobao path
-        await updateStatus(pr.id, 'needs_taobao_search')
-        const offers = await searchOffers(match.keywords, 3)
-        if (offers.length === 0) {
-          replyText = renderNotFoundMessage()
-        } else {
-          const top = offers[0]!
-          const breakdown = await computeQuote({
-            taobao_price_cny: top.price_cny,
-            est_weight_kg: top.weight_kg,
-            category: 'electronics_medium',
-          })
-          await saveQuote({
-            requestId: pr.id,
-            source: '1688',
-            sourceUrl: top.source_url,
-            titleCn: top.title_cn,
-            titleEn: top.title_en,
-            imageUrl: top.image_url,
-            taobaoPriceCny: top.price_cny,
-            breakdown,
-          })
-          await updateStatus(pr.id, 'taobao_found')
-          await updateStatus(pr.id, 'quoted')
-          replyText = renderQuoteMessage({
-            productTitle: top.title_en,
-            breakdown,
-            etaDays: 14,
-          })
-        }
+        // No strong match in Shopify cache. Skip 1688 sourcing for now —
+        // let the LLM respond conversationally with whatever candidates we
+        // did find as grounding, so the team sees the request and the
+        // customer gets a real answer.
+        replyText = await chatAnswer(state, match.candidates)
+        await updateStatus(pr.id, 'closed')
       }
       break
     }
