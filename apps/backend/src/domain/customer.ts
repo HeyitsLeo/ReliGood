@@ -1,6 +1,6 @@
 import { getDb } from '@zamgo/db'
 import { customers } from '@zamgo/db/schema'
-import { eq } from 'drizzle-orm'
+import { eq, sql } from 'drizzle-orm'
 
 export interface CustomerRow {
   id: string
@@ -48,4 +48,11 @@ export async function getCustomerById(id: string) {
   const db = getDb()
   const rows = await db.select().from(customers).where(eq(customers.id, id)).limit(1)
   return rows[0] ?? null
+}
+
+/** Total number of customers. Used as the sequential member number for welcome messages. */
+export async function countCustomers(): Promise<number> {
+  const db = getDb()
+  const rows = await db.select({ count: sql<number>`count(*)::int` }).from(customers)
+  return rows[0]?.count ?? 0
 }

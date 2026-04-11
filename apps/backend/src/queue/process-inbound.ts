@@ -9,11 +9,12 @@ import { routeMessage } from '../ai/router.js'
 import { matchProduct } from '../ai/matcher.js'
 import { answerFaq, greetingResponse } from '../ai/inquiry.js'
 import { renderQuoteMessage, renderMatchConfirmMessage, renderNotFoundMessage } from '../ai/quote.js'
+import { renderWelcomeMessage } from '../ai/welcome.js'
 import { createProductRequest, updateStatus, updateMatch } from '../domain/product-request.js'
 import { computeQuote } from '../domain/quote.js'
 import { saveQuote } from '../domain/quote-repo.js'
 import { getMessage, insertMessage } from '../domain/messages.js'
-import { getCustomerById } from '../domain/customer.js'
+import { getCustomerById, countCustomers } from '../domain/customer.js'
 import { sendText } from '../integrations/whatsapp/index.js'
 import { searchOffers } from '../integrations/onesix88/index.js'
 import { MAX_RECENT_MESSAGES } from '@zamgo/shared'
@@ -36,6 +37,23 @@ export async function processInbound(data: InboundJobData): Promise<void> {
   // 1. Load state + route
   let state = await loadState(customerId)
   state = appendCustomerMessage(state, rawText)
+
+  // 1a. First-ever message from this customer → send ReliGood welcome message and stop.
+  //     messageCount === 1 means this is their very first inbound in the current state window.
+  if (state.messageCount === 1) {
+    const memberNumber = await countCustomers()
+    const welcomeText = renderWelcomeMessage({
+      phone: customer.waPhone,
+      memberNumber,
+    })
+    await sendReply(customer.waPhone, customerId, welcomeText, 'inquiry')
+    state = appendAgentMessage(state, welcomeText)
+    state.lastAgent = 'inquiry'
+    state.lastIntents = [...state.lastIntents, 'greeting' as const].slice(-MAX_RECENT_MESSAGES)
+    await saveState(state)
+    logger.info({ customerId, memberNumber }, 'welcome message sent')
+    return
+  }
 
   const route = await routeMessage(rawText, state)
   logger.info(
