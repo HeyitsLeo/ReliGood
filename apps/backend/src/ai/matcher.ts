@@ -12,15 +12,16 @@ export interface MatchResult {
 }
 
 /**
- * Match a customer query (text + optional image) against shopify_products_cache
- * via pgvector cosine similarity on the deterministic embeddings.
+ * Fetch the top-K pgvector candidates for a customer query (text + optional
+ * image), with NO threshold gating. Used by the LLM-as-judge flow which makes
+ * the match decision itself rather than relying on fixed cosine thresholds.
  */
-export async function matchProduct(params: {
+export async function findCandidates(params: {
   text: string
   imageUrl?: string | null
   topK?: number
-}): Promise<MatchResult> {
-  const { text, imageUrl, topK = 5 } = params
+}): Promise<{ candidates: MatchCandidate[]; keywords: string }> {
+  const { text, imageUrl, topK = 10 } = params
 
   // 1. Vision keywords (if image)
   let visionKeywords = ''
@@ -72,6 +73,31 @@ export async function matchProduct(params: {
     in_stock: r.in_stock,
   }))
 
+  logger.info(
+    {
+      top: candidates[0]
+        ? { title: candidates[0].title, sim: candidates[0].similarity.toFixed(3) }
+        : null,
+      candidates: candidates.length,
+    },
+    'findCandidates result',
+  )
+
+  return { candidates, keywords: combined }
+}
+
+/**
+ * Match a customer query (text + optional image) against shopify_products_cache
+ * via pgvector cosine similarity on the deterministic embeddings.
+ */
+export async function matchProduct(params: {
+  text: string
+  imageUrl?: string | null
+  topK?: number
+}): Promise<MatchResult> {
+  const { text, imageUrl, topK = 5 } = params
+  const { candidates, keywords } = await findCandidates({ text, imageUrl, topK })
+
   const bestMatch = candidates[0] ?? null
   let tier: MatchResult['tier'] = 'needs_taobao_search'
   if (bestMatch) {
@@ -89,5 +115,5 @@ export async function matchProduct(params: {
     'matcher result',
   )
 
-  return { candidates, bestMatch, tier, keywords: combined }
+  return { candidates, bestMatch, tier, keywords }
 }

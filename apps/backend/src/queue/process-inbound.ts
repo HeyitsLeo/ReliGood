@@ -7,16 +7,16 @@ import {
   appendAgentMessage,
 } from '../ai/conversation-state.js'
 import { routeMessage } from '../ai/router.js'
-import { matchProduct } from '../ai/matcher.js'
+import { findCandidates } from '../ai/matcher.js'
+import { judgeProductMatch } from '../ai/product-judge.js'
 import { answerFaq } from '../ai/inquiry.js'
 import { chatAnswer } from '../ai/chat.js'
-import { renderMatchConfirmMessage } from '../ai/quote.js'
 import { renderWelcomeMessage } from '../ai/welcome.js'
 import { createProductRequest, updateStatus, updateMatch } from '../domain/product-request.js'
 import { getMessage, insertMessage } from '../domain/messages.js'
 import { getCustomerById, countCustomers } from '../domain/customer.js'
 import { sendText } from '../integrations/whatsapp/index.js'
-import { MAX_RECENT_MESSAGES } from '@zamgo/shared'
+import { MAX_RECENT_MESSAGES, SIMILARITY_THRESHOLDS } from '@zamgo/shared'
 
 export interface InboundJobData {
   messageId: string
@@ -122,29 +122,43 @@ export async function processInbound(data: InboundJobData): Promise<void> {
       state.activeRequestId = pr.id
       await updateStatus(pr.id, 'matching')
 
-      const match = await matchProduct({ text: rawText, imageUrl: imageUrl ?? null })
-      await updateMatch(pr.id, { aiKeywords: match.keywords })
+      const { candidates, keywords } = await findCandidates({
+        text: rawText,
+        imageUrl: imageUrl ?? null,
+        topK: 10,
+      })
+      await updateMatch(pr.id, { aiKeywords: keywords })
 
-      if (match.tier === 'auto_use' && match.bestMatch) {
-        await updateMatch(pr.id, { matchedSkuId: match.bestMatch.shopify_product_id })
+      // Fast path: very high pgvector similarity → auto-quote, skip LLM judge.
+      const top = candidates[0]
+      if (top && top.similarity >= SIMILARITY_THRESHOLDS.AUTO_USE) {
+        await updateMatch(pr.id, { matchedSkuId: top.shopify_product_id })
         await updateStatus(pr.id, 'matched_shopify')
-        // Synthesize a quote from the SKU price (treat as already-ZMW, no fx needed)
-        replyText = `Good news! We have "${match.bestMatch.title}" in stock for ZMW ${match.bestMatch.price_zmw.toFixed(
+        replyText = `Good news! We have "${top.title}" in stock for ZMW ${top.price_zmw.toFixed(
           2,
         )}. Reply YES to place your order. 📦`
         await updateStatus(pr.id, 'quoted')
-      } else if (match.tier === 'needs_confirmation' && match.bestMatch) {
-        await updateMatch(pr.id, { matchedSkuId: match.bestMatch.shopify_product_id })
-        replyText = renderMatchConfirmMessage({
-          productTitle: match.bestMatch.title,
-          similarity: match.bestMatch.similarity,
-        })
+        break
+      }
+
+      // LLM judge over the candidate set.
+      const judged = await judgeProductMatch(state, candidates)
+      logger.info(
+        { matched: judged.matched, reason: judged.reason, candidates: candidates.length },
+        'judge result',
+      )
+
+      if (judged.matched) {
+        await updateMatch(pr.id, { matchedSkuId: judged.product.shopify_product_id })
+        await updateStatus(pr.id, 'matched_shopify')
+        replyText = `Good news! We have "${judged.product.title}" in stock for ZMW ${judged.product.price_zmw.toFixed(
+          2,
+        )}. Reply YES to place your order. 📦`
+        await updateStatus(pr.id, 'quoted')
       } else {
-        // No strong match in Shopify cache. Skip 1688 sourcing and reply
-        // with a fixed, honest English message so the customer knows we
-        // don't carry what they described.
-        replyText =
-          "Sorry, we don't have what you're describing at the moment."
+        // No confident match → conversational reply grounded in top candidates
+        // so the LLM can naturally ask for more details (model, color, budget).
+        replyText = await chatAnswer(state, candidates)
         await updateStatus(pr.id, 'closed')
       }
       break
