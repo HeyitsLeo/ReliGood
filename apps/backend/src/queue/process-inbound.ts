@@ -9,6 +9,7 @@ import {
 import { routeMessage } from '../ai/router.js'
 import { matchProduct } from '../ai/matcher.js'
 import { answerFaq } from '../ai/inquiry.js'
+import { chatAnswer } from '../ai/chat.js'
 import { renderQuoteMessage, renderMatchConfirmMessage, renderNotFoundMessage } from '../ai/quote.js'
 import { renderWelcomeMessage } from '../ai/welcome.js'
 import { createProductRequest, updateStatus, updateMatch } from '../domain/product-request.js'
@@ -111,10 +112,9 @@ export async function processInbound(data: InboundJobData): Promise<void> {
           memberNumber,
         })
       } else {
+        // FAQ fast-path first (cheap, deterministic). Fall back to LLM chat.
         const faq = await answerFaq(rawText)
-        replyText =
-          faq ??
-          "Let me check with our team and get back to you. In the meantime, what product are you looking for?"
+        replyText = faq ?? (await chatAnswer(state))
       }
       break
     }
@@ -193,7 +193,8 @@ export async function processInbound(data: InboundJobData): Promise<void> {
       break
     }
     default: {
-      replyText = "Got it 👍 our team will follow up shortly."
+      // Unknown intent → let the LLM have a conversation with ReliGood context.
+      replyText = await chatAnswer(state)
     }
   }
 
