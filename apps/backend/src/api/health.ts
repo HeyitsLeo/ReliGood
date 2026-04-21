@@ -2,6 +2,7 @@ import type { FastifyInstance } from 'fastify'
 import { getSql } from '@zamgo/db'
 import { Redis } from 'ioredis'
 import { env } from '../config.js'
+import { getInboundQueue } from '../queue/index.js'
 
 let _pingRedis: Redis | null = null
 
@@ -27,6 +28,18 @@ export async function registerHealth(app: FastifyInstance) {
     } catch (e) {
       result.redis = `error: ${(e as Error).message}`
       result.ok = false
+    }
+    // Queue depth
+    try {
+      const counts = await getInboundQueue().getJobCounts(
+        'waiting',
+        'active',
+        'delayed',
+        'failed',
+      )
+      result.queue = counts
+    } catch (e) {
+      result.queue = `error: ${(e as Error).message}`
     }
     // Always return 200 for Railway liveness check; include dependency status for monitoring
     return reply.code(200).send(result)

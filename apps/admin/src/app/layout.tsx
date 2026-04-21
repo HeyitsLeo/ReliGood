@@ -13,6 +13,7 @@ const nav = [
   { href: '/inbox', label: 'Inbox' },
   { href: '/requests', label: 'Requests' },
   { href: '/orders', label: 'Orders' },
+  { href: '/products', label: 'Products' },
   { href: '/settings', label: 'Settings' },
 ]
 

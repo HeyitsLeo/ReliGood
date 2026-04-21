@@ -1,12 +1,14 @@
 import Fastify from 'fastify'
+import multipart from '@fastify/multipart'
 import { env } from './config.js'
 import { logger } from './logger.js'
 import { registerWhatsAppWebhook } from './api/whatsapp-webhook.js'
 import { registerTwilioWebhook } from './api/twilio-webhook.js'
 import { registerHealth } from './api/health.js'
+import { registerUpload } from './api/upload.js'
 import { registerTrpc } from './api/trpc.js'
 import { closeDb } from '@zamgo/db'
-import { shutdownQueue, startWorker } from './queue/index.js'
+import { shutdownQueue, startWorker, startExpireListingsWorker } from './queue/index.js'
 
 async function bootstrap() {
   const app = Fastify({
@@ -22,7 +24,10 @@ async function bootstrap() {
     if (req.method === 'OPTIONS') return reply.code(204).send()
   })
 
+  await app.register(multipart, { limits: { fileSize: 5 * 1024 * 1024 } })
+
   await registerHealth(app)
+  await registerUpload(app)
   // Wrap in plugin so its custom JSON parser doesn't leak to tRPC routes
   await app.register(async (scope) => {
     await registerWhatsAppWebhook(scope)
@@ -30,8 +35,9 @@ async function bootstrap() {
   await registerTwilioWebhook(app)
   await registerTrpc(app)
 
-  // Start BullMQ worker in-process (needed for single-service Railway deploy)
+  // Start BullMQ workers in-process (needed for single-service Railway deploy)
   startWorker()
+  startExpireListingsWorker()
 
   const port = env.PORT ?? env.BACKEND_PORT
   await app.listen({ port, host: '0.0.0.0' })

@@ -4,7 +4,7 @@ import { REDIS_KEYS, MAX_RECENT_MESSAGES } from '@zamgo/shared'
 import type { ConversationState } from './types.js'
 
 let _redis: Redis | null = null
-function getRedis(): Redis {
+export function getRedis(): Redis {
   if (!_redis) {
     _redis = new Redis(env.REDIS_URL, {
       maxRetriesPerRequest: 3,
@@ -50,9 +50,11 @@ export function freshState(customerId: string): ConversationState {
     within24hWindow: true,
     hasPendingQuote: false,
     hasUnpaidOrder: false,
+    awaitingPaymentVerification: false,
     escalatedToHuman: false,
     tags: ['new_user'],
     recentMessages: [],
+    pendingQuoteData: null,
   }
 }
 

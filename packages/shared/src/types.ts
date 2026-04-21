@@ -94,3 +94,33 @@ export interface RouteDecision {
   method: 'rule' | 'llm' | 'fallback'
   agent: AgentType
 }
+
+/** Snapshot of the pending quote stored in Redis conversation state */
+export interface PendingQuoteData {
+  productTitle: string
+  priceZmw: number
+  depositZmw: number
+  balanceZmw: number
+  imageUrl: string | null
+  shopifyProductId: string
+  requestId: string
+  quoteId: string | null
+}
+
+/** Valid order status transitions */
+export const ORDER_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
+  draft: ['paid_deposit', 'cancelled'],
+  paid_deposit: ['ordered_from_taobao', 'refund_requested', 'cancelled'],
+  ordered_from_taobao: ['in_transit_cn', 'refund_requested', 'cancelled'],
+  in_transit_cn: ['arrived_cn_wh'],
+  arrived_cn_wh: ['in_transit_air'],
+  in_transit_air: ['arrived_zm_wh'],
+  arrived_zm_wh: ['ready_pickup'],
+  ready_pickup: ['picked_up', 'no_show_forfeit'],
+  picked_up: ['completed'],
+  completed: [],
+  refund_requested: ['refunded', 'cancelled'],
+  refunded: [],
+  cancelled: [],
+  no_show_forfeit: [],
+}

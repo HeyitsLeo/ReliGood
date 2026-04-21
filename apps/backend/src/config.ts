@@ -29,6 +29,13 @@ const EnvSchema = z.object({
   TWILIO_ACCOUNT_SID: z.string().default(''),
   TWILIO_AUTH_TOKEN: z.string().default(''),
   TWILIO_WHATSAPP_NUMBER: z.string().default('+14155238886'),
+  SUPABASE_URL: z.string().default(''),
+  SUPABASE_SERVICE_KEY: z.string().default(''),
+  WORKER_CONCURRENCY: z.coerce.number().default(16),
+  DB_POOL_MAX: z.coerce.number().default(20),
+  LLM_TIMEOUT_MS: z.coerce.number().default(20000),
+  LLM_MAX_RETRIES: z.coerce.number().default(2),
+  CUSTOMER_LOCK_TTL_MS: z.coerce.number().default(25000),
 })
 
 export const env = EnvSchema.parse(process.env)

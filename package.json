@@ -5,7 +5,7 @@
   "type": "module",
   "packageManager": "pnpm@9.12.0",
   "scripts": {
-    "dev": "concurrently -k -n backend,worker,admin -c blue,magenta,green \"pnpm -C apps/backend dev\" \"pnpm -C apps/backend dev:worker\" \"pnpm -C apps/admin dev\"",
+    "dev": "concurrently -k -n backend,worker,admin,storefront -c blue,magenta,green,cyan \"pnpm -C apps/backend dev\" \"pnpm -C apps/backend dev:worker\" \"pnpm -C apps/admin dev\" \"pnpm -C apps/storefront dev\"",
     "build": "pnpm -r build",
     "test": "pnpm -C apps/backend test",
     "db:migrate": "pnpm -C packages/db migrate",

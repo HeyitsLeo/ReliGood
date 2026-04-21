@@ -1,9 +1,10 @@
 import { z } from 'zod'
 import { router, publicProcedure } from '../context.js'
 import { getDb } from '@zamgo/db'
-import { productRequests, customers } from '@zamgo/db/schema'
+import { productRequests, customers, tempListings, shopifyProductsCache } from '@zamgo/db/schema'
 import { eq, desc } from 'drizzle-orm'
-import { KANBAN_COLUMNS } from '@zamgo/shared'
+import { KANBAN_COLUMNS, PRODUCT_REQUEST_STATUSES } from '@zamgo/shared'
+import { updateStatus } from '../../domain/product-request.js'
 
 /**
  * Map Kanban columns → set of underlying statuses.
@@ -42,6 +43,7 @@ export const requestsRouter = router({
         .limit(100)
       return rows.filter((r) => statuses.includes(r.status))
     }),
+
   listAll: publicProcedure.query(async () => {
     const db = getDb()
     return db
@@ -50,4 +52,84 @@ export const requestsRouter = router({
       .orderBy(desc(productRequests.createdAt))
       .limit(200)
   }),
+
+  // ── G4: Status transition mutation ──
+  updateStatus: publicProcedure
+    .input(
+      z.object({
+        id: z.string().uuid(),
+        status: z.enum(PRODUCT_REQUEST_STATUSES),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      await updateStatus(input.id, input.status)
+      return { ok: true }
+    }),
+
+  // ── G4: Assign CS agent ──
+  assign: publicProcedure
+    .input(
+      z.object({
+        id: z.string().uuid(),
+        csAgentId: z.string().uuid().nullable(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const db = getDb()
+      await db
+        .update(productRequests)
+        .set({ assignedCsId: input.csAgentId, updatedAt: new Date() })
+        .where(eq(productRequests.id, input.id))
+      return { ok: true }
+    }),
+
+  // ── G9: Promote temp listing to permanent store product ──
+  listToStore: publicProcedure
+    .input(
+      z.object({
+        tempListingId: z.string().uuid(),
+        category: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const db = getDb()
+      const listing = await db
+        .select()
+        .from(tempListings)
+        .where(eq(tempListings.id, input.tempListingId))
+        .limit(1)
+      if (!listing[0]) throw new Error('Temp listing not found')
+      const tl = listing[0]
+
+      // Mark as promoted
+      await db
+        .update(tempListings)
+        .set({ promoted: true })
+        .where(eq(tempListings.id, input.tempListingId))
+
+      // Upsert into shopify_products_cache as permanent (isTemp = false)
+      const productId = `promoted-${tl.id}`
+      await db
+        .insert(shopifyProductsCache)
+        .values({
+          shopifyProductId: productId,
+          title: tl.titleEn || tl.titleCn || 'Untitled',
+          description: `Sourced from ${tl.sourceUrl}`,
+          category: input.category || tl.category,
+          priceZmw: tl.currentPriceZmw,
+          isTemp: false,
+          inStock: true,
+        })
+        .onConflictDoUpdate({
+          target: shopifyProductsCache.shopifyProductId,
+          set: {
+            isTemp: false,
+            inStock: true,
+            category: input.category || tl.category,
+            syncedAt: new Date(),
+          },
+        })
+
+      return { ok: true, productId }
+    }),
 })

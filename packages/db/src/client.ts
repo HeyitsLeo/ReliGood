@@ -12,7 +12,8 @@ let _db: DbClient | null = null
 
 export function getDb(): DbClient {
   if (!_db) {
-    _sql = postgres(DATABASE_URL, { max: 10 })
+    const poolMax = Number(process.env.DB_POOL_MAX ?? 20)
+    _sql = postgres(DATABASE_URL, { max: poolMax })
     _db = drizzle(_sql, { schema })
   }
   return _db

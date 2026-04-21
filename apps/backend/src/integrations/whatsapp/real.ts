@@ -70,6 +70,26 @@ export async function sendInteractiveList(
   return { messageId }
 }
 
+export async function sendImage(
+  waPhone: string,
+  imageUrl: string,
+  caption?: string,
+): Promise<{ messageId: string }> {
+  const phone = waPhone.replace(/^\+/, '')
+  const body: Record<string, unknown> = {
+    messaging_product: 'whatsapp',
+    to: phone,
+    type: 'image',
+    image: { link: imageUrl, ...(caption ? { caption: caption.slice(0, 1024) } : {}) },
+  }
+  const data = (await graphPost(`${env.WHATSAPP_PHONE_NUMBER_ID}/messages`, body)) as {
+    messages?: Array<{ id: string }>
+  }
+  const messageId = data.messages?.[0]?.id ?? `wa-${Date.now()}`
+  logger.info({ to: phone, messageId }, '[whatsapp] sendImage')
+  return { messageId }
+}
+
 export async function getMediaUrl(mediaId: string): Promise<string> {
   const url = `${API_BASE}/${mediaId}`
   const res = await fetch(url, {

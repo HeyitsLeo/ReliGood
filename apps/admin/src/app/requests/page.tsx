@@ -1,5 +1,6 @@
 'use client'
 import { trpc } from '@/lib/trpc'
+import { useState } from 'react'
 
 const COLUMNS = [
   { key: 'new', label: 'New', color: 'bg-slate-100' },
@@ -31,8 +32,25 @@ function KanbanColumn({
   label: string
   color: string
 }) {
+  const utils = trpc.useUtils()
   const { data } = trpc.requests.listByStatus.useQuery({ status })
   const items = data ?? []
+
+  const updateStatusMut = trpc.requests.updateStatus.useMutation({
+    onSuccess: () => {
+      // Invalidate all columns since items move between them
+      for (const col of COLUMNS) {
+        utils.requests.listByStatus.invalidate({ status: col.key })
+      }
+    },
+  })
+
+  const listToStoreMut = trpc.requests.listToStore.useMutation({
+    onSuccess: () => {
+      utils.requests.listByStatus.invalidate({ status })
+    },
+  })
+
   return (
     <div className={`rounded-lg p-3 ${color}`}>
       <div className="flex items-center justify-between mb-2">
@@ -53,9 +71,86 @@ function KanbanColumn({
             <div className="mt-1 text-[10px] text-slate-400">
               {new Date(r.createdAt as unknown as string).toLocaleTimeString()}
             </div>
+
+            {/* ── G4: Action buttons ── */}
+            <div className="mt-2 flex flex-wrap gap-1">
+              {status === 'new' && (
+                <ActionBtn
+                  label="Start Matching"
+                  color="bg-blue-500"
+                  loading={updateStatusMut.isPending}
+                  onClick={() => updateStatusMut.mutate({ id: r.id, status: 'matching' })}
+                />
+              )}
+              {status === 'matching' && (
+                <>
+                  <ActionBtn
+                    label="Approve"
+                    color="bg-green-600"
+                    loading={updateStatusMut.isPending}
+                    onClick={() => updateStatusMut.mutate({ id: r.id, status: 'quoted' })}
+                  />
+                  <ActionBtn
+                    label="Reject"
+                    color="bg-red-500"
+                    loading={updateStatusMut.isPending}
+                    onClick={() => updateStatusMut.mutate({ id: r.id, status: 'closed' })}
+                  />
+                </>
+              )}
+              {status === 'quoted' && (
+                <ActionBtn
+                  label="Mark Accepted"
+                  color="bg-green-600"
+                  loading={updateStatusMut.isPending}
+                  onClick={() => updateStatusMut.mutate({ id: r.id, status: 'accepted' })}
+                />
+              )}
+              {status === 'paid' && (
+                <ActionBtn
+                  label="Close / Fulfill"
+                  color="bg-slate-600"
+                  loading={updateStatusMut.isPending}
+                  onClick={() => updateStatusMut.mutate({ id: r.id, status: 'closed' })}
+                />
+              )}
+              {/* G9: List to Store button for fulfilled temp items */}
+              {status === 'fulfilled' && r.matchedSkuId && (
+                <ActionBtn
+                  label="List to Store"
+                  color="bg-indigo-600"
+                  loading={listToStoreMut.isPending}
+                  onClick={() =>
+                    listToStoreMut.mutate({ tempListingId: r.matchedSkuId! })
+                  }
+                />
+              )}
+            </div>
           </div>
         ))}
       </div>
     </div>
+  )
+}
+
+function ActionBtn({
+  label,
+  color,
+  loading,
+  onClick,
+}: {
+  label: string
+  color: string
+  loading: boolean
+  onClick: () => void
+}) {
+  return (
+    <button
+      className={`${color} text-white text-[10px] px-2 py-0.5 rounded hover:opacity-80 disabled:opacity-50`}
+      disabled={loading}
+      onClick={onClick}
+    >
+      {loading ? '...' : label}
+    </button>
   )
 }

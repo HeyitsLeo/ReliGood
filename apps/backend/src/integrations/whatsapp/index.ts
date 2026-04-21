@@ -14,6 +14,7 @@ function resolveImpl(): Impl {
 const impl: Impl = resolveImpl()
 
 export const sendText = impl.sendText
+export const sendImage = impl.sendImage
 export const sendInteractiveList = impl.sendInteractiveList
 export const getMediaUrl = impl.getMediaUrl
 

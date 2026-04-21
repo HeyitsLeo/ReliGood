@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Hide scrollbar for horizontal scrollers */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* iPhone safe area bottom padding */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Glassmorphism utility */
+.glass {
+  background: rgba(243, 239, 229, 0.8);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+/* Primary gradient */
+.primary-gradient {
+  background: linear-gradient(135deg, #0D5550 0%, #1A7A73 100%);
+}
+
+/* Hero gradient overlay */
+.hero-gradient {
+  background: linear-gradient(to right, #F3EFE5 0%, rgba(243, 239, 229, 0.8) 40%, transparent 70%);
+}
+
+/* Mask fade for hero image */
+.mask-fade-left {
+  mask-image: linear-gradient(to left, black 50%, rgba(0,0,0,0.3) 75%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to left, black 50%, rgba(0,0,0,0.3) 75%, transparent 100%);
+}
+
+/* Paper texture */
+.paper-texture {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.45' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+}

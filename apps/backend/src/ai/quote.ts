@@ -33,3 +33,29 @@ export function renderMatchConfirmMessage(params: {
 export function renderNotFoundMessage(): string {
   return `We don't have it in stock but we can source it from China (usually 14 days). Can you send a picture or product link? 🔍`
 }
+
+export function renderDepositInstruction(params: {
+  orderCode: string
+  depositZmw: number
+  totalZmw: number
+}): string {
+  const { orderCode, depositZmw, totalZmw } = params
+  return [
+    `Order *${orderCode}* confirmed! 🎉`,
+    ``,
+    `💰 *Deposit required:* ZMW ${depositZmw.toFixed(2)}`,
+    `📦 *Order total:* ZMW ${totalZmw.toFixed(2)}`,
+    ``,
+    `*How to pay (Airtel Money):*`,
+    `1. Dial *182*1#* on your phone`,
+    `2. Select "Send Money"`,
+    `3. Send ZMW ${depositZmw.toFixed(2)} to *0977XXXXXX*`,
+    `4. Use reference: *${orderCode}*`,
+    ``,
+    `After sending, take a screenshot of your Airtel confirmation and send it here. We'll verify and start processing your order! 📸`,
+  ].join('\n')
+}
+
+export function renderPaymentReceivedMessage(orderCode: string): string {
+  return `Thank you! 🙏 We received your payment screenshot for *${orderCode}*. Our team will verify it within 30 minutes and start processing your order. We'll keep you updated!`
+}

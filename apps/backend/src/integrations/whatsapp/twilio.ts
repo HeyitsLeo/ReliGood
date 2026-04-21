@@ -62,6 +62,38 @@ export async function sendInteractiveList(
   return { messageId }
 }
 
+export async function sendImage(
+  waPhone: string,
+  imageUrl: string,
+  caption?: string,
+): Promise<{ messageId: string }> {
+  const fromNumber = env.TWILIO_WHATSAPP_NUMBER.replace(/^\+/, '')
+  const toNumber = waPhone.replace(/^\+/, '')
+  const formBody = new URLSearchParams({
+    From: `whatsapp:+${fromNumber}`,
+    To: `whatsapp:+${toNumber}`,
+    Body: caption ?? '',
+    MediaUrl: imageUrl,
+  })
+  const res = await fetch(TWILIO_API, {
+    method: 'POST',
+    headers: {
+      Authorization: basicAuth(),
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: formBody.toString(),
+  })
+  if (!res.ok) {
+    const text = await res.text()
+    logger.error({ status: res.status, body: text }, 'Twilio API error (sendImage)')
+    throw new Error(`Twilio API ${res.status}: ${text}`)
+  }
+  const data = (await res.json()) as { sid?: string }
+  const messageId = data.sid ?? `twilio-${Date.now()}`
+  logger.info({ to: waPhone, messageId }, '[twilio] sendImage')
+  return { messageId }
+}
+
 export async function getMediaUrl(mediaId: string): Promise<string> {
   // Twilio webhook provides MediaUrl directly — just return it
   return mediaId

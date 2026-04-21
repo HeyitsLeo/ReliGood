@@ -60,6 +60,24 @@ export async function sendInteractiveList(
   return { messageId }
 }
 
+export async function sendImage(
+  waPhone: string,
+  imageUrl: string,
+  caption?: string,
+): Promise<{ messageId: string }> {
+  const messageId = `mock-msg-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
+  await appendJsonl({
+    ts: new Date().toISOString(),
+    to: waPhone,
+    type: 'image',
+    imageUrl,
+    caption: caption ?? null,
+    messageId,
+  })
+  logger.info({ to: waPhone, imageUrl, caption: caption?.slice(0, 60) }, '[whatsapp-mock] sendImage')
+  return { messageId }
+}
+
 export async function getMediaUrl(mediaId: string): Promise<string> {
   logger.info({ mediaId }, '[whatsapp-mock] getMediaUrl')
   return `https://mock-cdn.example.com/media/${mediaId}`
