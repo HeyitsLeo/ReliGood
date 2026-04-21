@@ -1,6 +1,5 @@
 [build]
 builder = "nixpacks"
-buildCommand = "pnpm install"
 
 [deploy]
 startCommand = "pnpm db:migrate && node --import tsx apps/backend/src/index.ts"
