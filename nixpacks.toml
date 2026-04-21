@@ -1,5 +1,10 @@
+providers = ["node"]
+
+[phases.setup]
+nixPkgs = ["...", "nodePackages.pnpm"]
+
 [phases.install]
-cmds = ["corepack enable && pnpm install --frozen-lockfile"]
+cmds = ["pnpm install --frozen-lockfile"]
 
 [phases.build]
-cmds = ["echo 'no build step'"]
+cmds = ["pnpm --filter @zamgo/admin build", "pnpm --filter @zamgo/storefront build"]
