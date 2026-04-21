@@ -1,7 +1,7 @@
 providers = ["node"]
 
 [phases.setup]
-nixPkgs = ["...", "nodePackages.pnpm"]
+nixPkgs = ["..."]
 
 [phases.install]
 cmds = ["pnpm install --frozen-lockfile"]
